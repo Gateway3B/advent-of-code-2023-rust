@@ -19,10 +19,10 @@ struct PartNumber {
 
 impl PartNumber {
     pub fn adjacent_to(self: &Self, coord: &Coord) -> bool {
-        (coord.row - self.coord.row).abs() <= 1 &&
-        (0..self.digits).into_iter().any(|index| {
-            (coord.col - self.coord.col - index).abs() <= 1
-        })
+        (coord.row - self.coord.row).abs() <= 1
+            && (0..self.digits)
+                .into_iter()
+                .any(|index| (coord.col - self.coord.col - index).abs() <= 1)
     }
 }
 
@@ -33,10 +33,10 @@ impl Solvable for Day3 {
         3
     }
 
-    fn solve_part_one() -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<u32> {
         let mut symbol_coords: Vec<Coord> = Vec::new();
         let mut part_numbers: Vec<PartNumber> = Vec::new();
-    
+
         let path = Path::new("src/inputs/day3.txt");
         read_to_string(path)?
             .lines()
@@ -48,7 +48,7 @@ impl Solvable for Day3 {
                 line.chars().enumerate().try_for_each(|(col, char)| {
                     let col = i32::try_from(col).ok()?;
                     let row = i32::try_from(row).ok()?;
-    
+
                     if char.is_numeric() {
                         if number_str.len() == 0 {
                             coord_col = col;
@@ -58,17 +58,20 @@ impl Solvable for Day3 {
                             return Some(());
                         }
                     }
-                    
+
                     if char.is_ascii_punctuation() {
                         if char != '.' {
                             symbol_coords.push(Coord { row, col });
                         }
                     }
-    
+
                     if number_str.len() > 0 {
                         let number = number_str.parse().ok()?;
                         let digits = i32::try_from(number_str.len()).ok()?;
-                        let coord = Coord { row, col: coord_col };
+                        let coord = Coord {
+                            row,
+                            col: coord_col,
+                        };
                         part_numbers.push(PartNumber {
                             number,
                             digits,
@@ -76,39 +79,41 @@ impl Solvable for Day3 {
                         });
                         number_str = String::new();
                     }
-    
+
                     Some(())
                 })?;
-                
+
                 Some(())
-            }).context("")?;
-    
-        // println!("{:#?}", symbol_coords);
-        // println!("{:#?}", part_numbers);
-        
+            })
+            .context("")?;
+
+        if debug {
+            println!("{:#?}", symbol_coords);
+            println!("{:#?}", part_numbers);
+        }
+
         let sum = symbol_coords.iter().fold(0u32, |sum, symbol_coord| {
             let mut new_sum = sum;
-    
+
             part_numbers.retain(|part_number| {
                 if part_number.adjacent_to(symbol_coord) {
                     new_sum += part_number.number;
                     return false;
                 }
-    
+
                 part_number.coord.row >= symbol_coord.row - 1
             });
-    
+
             new_sum
         });
-    
+
         Ok(sum)
     }
-    
-    
-    fn solve_part_two() -> Result<u32> {
+
+    fn solve_part_two(debug: bool) -> Result<u32> {
         let mut symbol_coords: Vec<Coord> = Vec::new();
         let mut part_numbers: Vec<PartNumber> = Vec::new();
-    
+
         let path = Path::new("src/inputs/day3.txt");
         read_to_string(path)?
             .lines()
@@ -120,7 +125,7 @@ impl Solvable for Day3 {
                 line.chars().enumerate().try_for_each(|(col, char)| {
                     let col = i32::try_from(col).ok()?;
                     let row = i32::try_from(row).ok()?;
-    
+
                     if char.is_numeric() {
                         if number_str.len() == 0 {
                             coord_col = col;
@@ -130,17 +135,18 @@ impl Solvable for Day3 {
                             return Some(());
                         }
                     }
-    
-                    if char.is_ascii_punctuation() {
-                        if char != '.' {
-                            symbol_coords.push(Coord { row, col });
-                        }
+
+                    if char == '*' {
+                        symbol_coords.push(Coord { row, col });
                     }
-    
+
                     if number_str.len() > 0 {
                         let number = number_str.parse().ok()?;
                         let digits = i32::try_from(number_str.len()).ok()?;
-                        let coord = Coord { row, col: coord_col };
+                        let coord = Coord {
+                            row,
+                            col: coord_col,
+                        };
                         part_numbers.push(PartNumber {
                             number,
                             digits,
@@ -148,31 +154,55 @@ impl Solvable for Day3 {
                         });
                         number_str = String::new();
                     }
-    
+
                     Some(())
                 })?;
-    
+
                 Some(())
-            }).context("")?;
-    
-        // println!("{:#?}", symbol_coords);
-        // println!("{:#?}", part_numbers);
-    
+            })
+            .context("")?;
+
+        if debug {
+            println!("{:#?}", symbol_coords);
+            println!("{:#?}", part_numbers);
+        }
+
         let sum = symbol_coords.iter().fold(0u32, |sum, symbol_coord| {
             let mut new_sum = sum;
-    
-            part_numbers.retain(|part_number| {
+
+            let mut adj_part_numbers = Vec::new();
+
+            for part_number in part_numbers.iter() {
                 if part_number.adjacent_to(symbol_coord) {
-                    new_sum += part_number.number;
-                    return false;
+                    if debug {
+                        println!(
+                            "Adj Part: {:?} ; Symbol {:?}",
+                            part_number.number, symbol_coord
+                        );
+                    }
+                    if adj_part_numbers.len() == 2 {
+                        return new_sum;
+                    } else {
+                        adj_part_numbers.push(part_number.number);
+                    }
                 }
-    
-                part_number.coord.row >= symbol_coord.row - 1
-            });
-    
+
+                if part_number.coord.row > symbol_coord.row + 1 {
+                    break;
+                }
+            }
+
+            if adj_part_numbers.len() == 2 {
+                new_sum += adj_part_numbers.iter().product::<u32>();
+                if debug {
+                    println!("2 Adj Part Numbers: {:?}", &adj_part_numbers);
+                    println!("Product: {:?}", &adj_part_numbers.iter().product::<u32>());
+                }
+            }
+
             new_sum
         });
-    
+
         Ok(sum)
     }
 }
