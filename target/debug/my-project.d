@@ -1,1 +1,0 @@
-/home/runner/advent-of-code-2023-rust/target/debug/my-project: /home/runner/advent-of-code-2023-rust/src/days/day1.rs /home/runner/advent-of-code-2023-rust/src/days/day2.rs /home/runner/advent-of-code-2023-rust/src/days/day3.rs /home/runner/advent-of-code-2023-rust/src/days/mod.rs /home/runner/advent-of-code-2023-rust/src/main.rs
