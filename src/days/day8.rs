@@ -110,7 +110,7 @@ impl Solvable for Day8 {
         //     println!("{:#?}", map);
         // }
 
-        let mut keys = map.keys().fold(Vec::new(), |mut keys, key| {
+        let keys = map.keys().fold(Vec::new(), |mut keys, key| {
             if key.ends_with("A") {
                 keys.push(key);
             }
