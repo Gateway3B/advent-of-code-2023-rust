@@ -6,6 +6,18 @@ use std::path::Path;
 
 use std::collections::HashMap;
 
+fn gcd(mut a: u64, mut b: u64) -> u64 {
+    while b != 0 {
+        (a, b) = (b, a % b);
+    }
+
+    a
+}
+
+fn lcm(a: u64, b: u64) -> u64 {
+    (a * b) / gcd(a, b)
+}
+
 pub struct Day8 {}
 
 impl Solvable for Day8 {
@@ -109,45 +121,56 @@ impl Solvable for Day8 {
             println!("{:#?}", keys);
         }
 
-        let mut instructions_iter = instructions.chars();
-        let mut direction = instructions_iter.next().context("")?;
+        let path_lengths = keys
+            .into_iter()
+            .map(|key| {
+                let mut key = key;
+                (|| {
+                    let mut instructions_iter = instructions.chars();
+                    let mut direction = instructions_iter.next().context("")?;
 
-        let mut step_count = 0;
+                    let mut step_count = 0;
 
-        loop {
-            keys = keys
-                .iter()
-                .map(|key| {
-                    (|| {
-                        let value = map.get(*key)?;
+                    loop {
+                        let value = map.get(key).context("Map does not contain key")?;
                         if direction == 'L' {
-                            Some(&value.0)
+                            key = &value.0;
                         } else {
-                            Some(&value.1)
+                            key = &value.1;
                         }
-                    })()
-                })
-                .collect::<Option<Vec<&String>>>()
-                .context("")?;
 
-            step_count += 1;
+                        step_count += 1;
 
-            if keys.iter().all(|key| key.ends_with("Z")) {
-                break;
-            }
+                        if key.ends_with("Z") {
+                            break;
+                        }
 
-            if debug {
-                println!("{:#?}", keys);
-            }
+                        direction = if let Some(direction) = instructions_iter.next() {
+                            direction
+                        } else {
+                            instructions_iter = instructions.chars();
+                            instructions_iter.next().context("")?
+                        }
+                    }
 
-            direction = if let Some(direction) = instructions_iter.next() {
-                direction
-            } else {
-                instructions_iter = instructions.chars();
-                instructions_iter.next().context("")?
-            }
-        }
+                    Ok(step_count)
+                })()
+            })
+            .collect::<Result<Vec<u64>>>()?;
 
-        Ok(step_count)
+        let step_count = path_lengths
+            .into_iter()
+            .fold(None::<u64>, |lcm_res, length| {
+                if let Some(lcm_res) = lcm_res {
+                    Some(lcm(lcm_res, length))
+                } else {
+                    Some(length)
+                }
+            })
+            .context("No least common multiple")?;
+
+        println!("{}", step_count);
+
+        Ok(0)
     }
 }
