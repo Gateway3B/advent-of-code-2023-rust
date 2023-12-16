@@ -12,7 +12,7 @@ impl Solvable for Day4 {
         4
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
         let sum = read_to_string(path)?
@@ -51,10 +51,11 @@ impl Solvable for Day4 {
             })
             .context("Error parsing input.")?;
 
+        let sum = i64::try_from(sum)?;
         Ok(sum)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -112,7 +113,9 @@ impl Solvable for Day4 {
             })
             .context("Error parsing input.")?;
 
-        let sum = cards.iter().map(|(_, val)| val).sum();
-        Ok(sum)
+        let sum: u32 = cards.iter().map(|(_, val)| val).sum();
+
+        let summ = i64::try_from(sum)?;
+        Ok(summ)
     }
 }

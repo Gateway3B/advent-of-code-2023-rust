@@ -142,11 +142,11 @@ struct Coords {
     col: usize,
 }
 
-#[derive(Debug)]
+#[derive(EnumIs, Debug)]
 enum PathPosition {
     OutsidePath,
     OnPathPerp(Transition),
-    OnPathAngled((Transition, i32)),
+    OnPathAngled((Transition, Option<i32>)),
     InPath,
 }
 
@@ -258,7 +258,7 @@ impl Solvable for Day10 {
         10
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -335,12 +335,12 @@ impl Solvable for Day10 {
         }
 
         let steps_to_furthest_pipe = path_length / 2;
-        let steps_to_furthest_pipe = u32::try_from(steps_to_furthest_pipe)?;
-
+        
+        let steps_to_furthest_pipe = i64::try_from(steps_to_furthest_pipe)?;
         Ok(steps_to_furthest_pipe)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -442,37 +442,25 @@ impl Solvable for Day10 {
                                     println!("{:?}", coords);
                                 }
 
-                                match (&prev_path_position, is_path_pipe) {
+                                let curr_path_position = match (&prev_path_position, is_path_pipe) {
                                     (PathPosition::OutsidePath, true) => {
                                         if pipe.is_vertical() {
-                                            (
-                                                prev_interior_tiles,
-                                                PathPosition::OnPathPerp(Transition::Entered),
-                                            )
+                                            PathPosition::OnPathPerp(Transition::Entered)
                                         } else {
-                                            (
-                                                prev_interior_tiles,
-                                                PathPosition::OnPathAngled((
-                                                    Transition::Entered,
-                                                    pipe.angle_count(),
-                                                )),
-                                            )
+                                            PathPosition::OnPathAngled((
+                                                Transition::Entered,
+                                                Some(pipe.angle_count()),
+                                            ))
                                         }
                                     }
                                     (PathPosition::InPath, true) => {
                                         if pipe.is_vertical() {
-                                            (
-                                                prev_interior_tiles,
-                                                PathPosition::OnPathPerp(Transition::Exited),
-                                            )
+                                            PathPosition::OnPathPerp(Transition::Exited)
                                         } else {
-                                            (
-                                                prev_interior_tiles,
-                                                PathPosition::OnPathAngled((
-                                                    Transition::Exited,
-                                                    pipe.angle_count(),
-                                                )),
-                                            )
+                                            PathPosition::OnPathAngled((
+                                                Transition::Exited,
+                                                Some(pipe.angle_count()),
+                                            ))
                                         }
                                     }
                                     (
@@ -480,77 +468,67 @@ impl Solvable for Day10 {
                                         true,
                                     ) => {
                                         if pipe.is_vertical() {
-                                            (
-                                                prev_interior_tiles,
-                                                PathPosition::OnPathPerp(Transition::Exited),
-                                            )
+                                            PathPosition::OnPathPerp(!*transition)
                                         } else {
                                             if pipe.is_horizontal() {
-                                                (prev_interior_tiles, prev_path_position)
-                                            } else if transition.is_exited() {
-                                                (
-                                                    prev_interior_tiles,
-                                                    PathPosition::OnPathAngled((
-                                                        Transition::Entered,
-                                                        pipe.angle_count(),
-                                                    )),
-                                                )
-                                            } else if angle_count + pipe.angle_count() == 0 {
-                                                (
-                                                    prev_interior_tiles,
+                                                prev_path_position
+                                            } else if let Some(angle_count) = angle_count {
+                                                if angle_count + pipe.angle_count() == 0 {
                                                     PathPosition::OnPathAngled((
                                                         *transition,
-                                                        pipe.angle_count(),
-                                                    )),
-                                                )
-                                            } else {
-                                                (
-                                                    prev_interior_tiles,
+                                                        None,
+                                                    ))
+                                                } else {
                                                     PathPosition::OnPathAngled((
                                                         !*transition,
-                                                        pipe.angle_count(),
-                                                    )),
-                                                )
+                                                        None,
+                                                    ))
+                                                }
+                                            } else {
+                                                PathPosition::OnPathAngled((
+                                                    !*transition,
+                                                    Some(pipe.angle_count()),
+                                                ))
                                             }
                                         }
                                     }
                                     (PathPosition::OnPathAngled((transition, _)), false) => {
                                         if transition.is_entered() {
                                             map.inside_coords.insert(coords);
-                                            (prev_interior_tiles + 1, PathPosition::InPath)
+                                            PathPosition::InPath
                                         } else {
-                                            (prev_interior_tiles, PathPosition::OutsidePath)
+                                            PathPosition::OutsidePath
                                         }
                                     }
                                     (PathPosition::OnPathPerp(transition), true) => {
                                         if pipe.is_vertical() {
-                                            (
-                                                prev_interior_tiles,
-                                                PathPosition::OnPathPerp(!*transition),
-                                            )
+                                            PathPosition::OnPathPerp(!*transition)
                                         } else {
-                                            (
-                                                prev_interior_tiles,
-                                                PathPosition::OnPathAngled((
-                                                    !*transition,
-                                                    pipe.angle_count(),
-                                                )),
-                                            )
+                                            PathPosition::OnPathAngled((
+                                                !*transition,
+                                                Some(pipe.angle_count()),
+                                            ))
                                         }
                                     }
                                     (PathPosition::OnPathPerp(transition), false) => {
                                         if transition.is_entered() {
                                             map.inside_coords.insert(coords);
-                                            (prev_interior_tiles + 1, PathPosition::InPath)
+                                            PathPosition::InPath
                                         } else {
-                                            (prev_interior_tiles, PathPosition::OutsidePath)
+                                            PathPosition::OutsidePath
                                         }
                                     }
                                     (PathPosition::InPath, false) => {
-                                        map.inside_coords.insert(coords);
-                                        (prev_interior_tiles + 1, PathPosition::InPath)
+                                        PathPosition::InPath
                                     }
-                                    (_, _) => (prev_interior_tiles, prev_path_position),
+                                    (_, _) => prev_path_position,
+                                };
+
+                                if curr_path_position.is_in_path() {
+                                    map.inside_coords.insert(coords);
+                                    (prev_interior_tiles + 1, curr_path_position)
+                                } else {
+                                    (prev_interior_tiles, curr_path_position)
                                 }
                             },
                         )

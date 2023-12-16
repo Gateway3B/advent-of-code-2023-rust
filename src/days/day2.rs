@@ -11,7 +11,7 @@ impl Solvable for Day2 {
         2
     }
 
-    fn solve_part_one(_: bool) -> Result<u32> {
+    fn solve_part_one(_: bool) -> Result<i64> {
         let max_red = 12;
         let max_green = 13;
         let max_blue = 14;
@@ -60,13 +60,13 @@ impl Solvable for Day2 {
             })
             .context("")?;
 
-        let sum = u32::try_from(sum)?;
+        let sum = i64::try_from(sum)?;
         Ok(sum)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = Path::new("src/inputs/day2.txt");
-        read_to_string(path)?
+        let sum = read_to_string(path)?
             .lines()
             .enumerate()
             .try_fold(0, |sum, (index, line)| {
@@ -122,6 +122,9 @@ impl Solvable for Day2 {
                     None
                 }
             })
-            .context("")
+            .expect("");
+
+        let sum = i64::try_from(sum)?;
+        Ok(sum)
     }
 }

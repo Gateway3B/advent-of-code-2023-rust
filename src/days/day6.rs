@@ -40,7 +40,7 @@ impl Solvable for Day6 {
         6
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -78,12 +78,11 @@ impl Solvable for Day6 {
             })
             .context("Mult failed.")?;
 
-        let margin_product = u32::try_from(margin_product)?;
-
+        let margin_product = i64::try_from(margin_product)?;
         Ok(margin_product)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -114,8 +113,7 @@ impl Solvable for Day6 {
 
         let margin_of_error = race_record.margin_of_error_efficient();
 
-        let margin_of_error = u32::try_from(margin_of_error)?;
-
+        let margin_of_error = i64::try_from(margin_of_error)?;
         Ok(margin_of_error)
     }
 }

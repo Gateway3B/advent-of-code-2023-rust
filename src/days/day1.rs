@@ -11,7 +11,7 @@ impl Solvable for Day1 {
         1
     }
 
-    fn solve_part_one(_: bool) -> Result<u32> {
+    fn solve_part_one(_: bool) -> Result<i64> {
         let path = Path::new("src/inputs/day1.txt");
         let sum = read_to_string(path)?
             .lines()
@@ -26,10 +26,11 @@ impl Solvable for Day1 {
             })
             .context("Could not find numbers.")?;
 
+        let sum = i64::try_from(sum)?;
         Ok(sum)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = Path::new("src/inputs/day1.txt");
         let sum = read_to_string(path)?
             .lines()
@@ -134,6 +135,7 @@ impl Solvable for Day1 {
             })
             .context("")?;
 
+        let sum = i64::try_from(sum)?;
         Ok(sum)
     }
 }

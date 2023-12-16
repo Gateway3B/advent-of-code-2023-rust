@@ -11,7 +11,7 @@ impl Solvable for Day9 {
         9
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -63,12 +63,11 @@ impl Solvable for Day9 {
             })
             .sum();
 
-        let extrapolated_sum = u32::try_from(extrapolated_sum)?;
-
+        let extrapolated_sum = i64::try_from(extrapolated_sum)?;
         Ok(extrapolated_sum)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -125,9 +124,7 @@ impl Solvable for Day9 {
         }
 
         let extrapolated_sum: i32 = extrapolated_values.iter().sum();
-
-        println!("{}", extrapolated_sum);
-
-        Ok(0)
+        let extrapolated_sum = i64::try_from(extrapolated_sum)?;
+        Ok(extrapolated_sum)
     }
 }

@@ -229,7 +229,7 @@ impl Solvable for Day7 {
         7
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -278,12 +278,11 @@ impl Solvable for Day7 {
                 total_winnings + ((index + 1) * hand.bid)
             });
 
-        let total_winnings = u32::try_from(total_winnings)?;
-
+        let total_winnings = i64::try_from(total_winnings)?;
         Ok(total_winnings)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -333,8 +332,7 @@ impl Solvable for Day7 {
                 total_winnings + ((index + 1) * hand.bid)
             });
 
-        let total_winnings = u32::try_from(total_winnings)?;
-
+        let total_winnings = i64::try_from(total_winnings)?;
         Ok(total_winnings)
     }
 }

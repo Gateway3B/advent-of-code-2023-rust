@@ -33,7 +33,7 @@ impl Solvable for Day3 {
         3
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let mut symbol_coords: Vec<Coord> = Vec::new();
         let mut part_numbers: Vec<PartNumber> = Vec::new();
 
@@ -107,10 +107,11 @@ impl Solvable for Day3 {
             new_sum
         });
 
+        let sum = i64::try_from(sum)?;
         Ok(sum)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let mut symbol_coords: Vec<Coord> = Vec::new();
         let mut part_numbers: Vec<PartNumber> = Vec::new();
 
@@ -203,6 +204,7 @@ impl Solvable for Day3 {
             new_sum
         });
 
+        let sum = i64::try_from(sum)?;
         Ok(sum)
     }
 }

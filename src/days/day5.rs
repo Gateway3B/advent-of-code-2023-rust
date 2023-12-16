@@ -152,7 +152,7 @@ impl Solvable for Day5 {
         5
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -242,11 +242,11 @@ impl Solvable for Day5 {
 
         let min = *mapped_seeds.iter().min().context("Couldn't find min.")?;
 
-        let min = u32::try_from(min)?;
+        let min = i64::try_from(min)?;
         Ok(min)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
 
@@ -366,7 +366,7 @@ impl Solvable for Day5 {
             .min()
             .context("Couldn't find min.")?;
 
-        let min = u32::try_from(min)?;
+        let min = i64::try_from(min)?;
         Ok(min)
     }
 }

@@ -25,7 +25,7 @@ impl Solvable for Day8 {
         8
     }
 
-    fn solve_part_one(debug: bool) -> Result<u32> {
+    fn solve_part_one(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
         let file_string = read_to_string(path)?;
@@ -83,7 +83,7 @@ impl Solvable for Day8 {
         Ok(step_count)
     }
 
-    fn solve_part_two(debug: bool) -> Result<u32> {
+    fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
         let file_string = read_to_string(path)?;
@@ -169,8 +169,7 @@ impl Solvable for Day8 {
             })
             .context("No least common multiple")?;
 
-        println!("{}", step_count);
-
-        Ok(0)
+        let step_count = i64::try_from(step_count)?;
+        Ok(step_count)
     }
 }

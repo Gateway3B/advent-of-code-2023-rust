@@ -13,8 +13,8 @@ pub enum RunMode {
 pub trait Solvable {
     fn get_day() -> u32;
 
-    fn solve_part_one(debug: bool) -> Result<u32>;
-    fn solve_part_two(debug: bool) -> Result<u32>;
+    fn solve_part_one(debug: bool) -> Result<i64>;
+    fn solve_part_two(debug: bool) -> Result<i64>;
 
     fn solve(run_mode: RunMode) -> Result<()> {
         println!("Day {}:", Self::get_day());
@@ -54,7 +54,7 @@ fn main() -> Result<()> {
     Day7::solve(RunMode::Result)?;
     Day8::solve(RunMode::Result)?;
     Day9::solve(RunMode::Result)?;
-    Day10::solve(RunMode::DebugPartTwo)?;
+    Day10::solve(RunMode::Result)?;
 
     Ok(())
 }
