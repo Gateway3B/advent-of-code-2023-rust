@@ -55,6 +55,7 @@ fn main() -> Result<()> {
     Day8::solve(RunMode::Result)?;
     Day9::solve(RunMode::Result)?;
     Day10::solve(RunMode::Result)?;
+    Day11::solve(RunMode::Result)?;
 
     Ok(())
 }
