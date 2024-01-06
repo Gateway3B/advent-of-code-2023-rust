@@ -235,7 +235,7 @@ impl Solvable for Day14 {
                 let cycle_length = index - seen_index;
                 index = (1_000_000_000 - index) % cycle_length;
                 break;
-            }
+            }""
             
             seen.push(hash);
             platform.cycle()?;
