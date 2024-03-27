@@ -190,36 +190,36 @@ impl Map {
                 row: top_row,
                 col: coords.col,
             };
-            if !origin.is_some_and(|origin| origin.is_up()) {
-                neighbors.push((top, Direction::Up));
-            }
+            // if !origin.is_some_and(|origin| origin.is_up()) {
+            //     neighbors.push((top, Direction::Up));
+            // }
         }
         if right_col <= self.columns_count {
             let right = Coords {
                 row: coords.row,
                 col: right_col,
             };
-            if !origin.is_some_and(|origin| origin.is_right()) {
-                neighbors.push((right, Direction::Right));
-            }
+            // if !origin.is_some_and(|origin| origin.is_right()) {
+            //     neighbors.push((right, Direction::Right));
+            // }
         }
         if bottom_row <= self.rows_count {
             let bottom = Coords {
                 row: bottom_row,
                 col: coords.col,
             };
-            if !origin.is_some_and(|origin| origin.is_down()) {
-                neighbors.push((bottom, Direction::Down));
-            }
+            // if !origin.is_some_and(|origin| origin.is_down()) {
+            //     neighbors.push((bottom, Direction::Down));
+            // }
         }
         if let Some(left_col) = left_col {
             let left = Coords {
                 row: coords.row,
                 col: left_col,
             };
-            if !origin.is_some_and(|origin| origin.is_left()) {
-                neighbors.push((left, Direction::Left));
-            }
+            // if !origin.is_some_and(|origin| origin.is_left()) {
+            //     neighbors.push((left, Direction::Left));
+            // }
         }
 
         neighbors
@@ -335,7 +335,7 @@ impl Solvable for Day10 {
         }
 
         let steps_to_furthest_pipe = path_length / 2;
-        
+
         let steps_to_furthest_pipe = i64::try_from(steps_to_furthest_pipe)?;
         Ok(steps_to_furthest_pipe)
     }
@@ -474,15 +474,9 @@ impl Solvable for Day10 {
                                                 prev_path_position
                                             } else if let Some(angle_count) = angle_count {
                                                 if angle_count + pipe.angle_count() == 0 {
-                                                    PathPosition::OnPathAngled((
-                                                        *transition,
-                                                        None,
-                                                    ))
+                                                    PathPosition::OnPathAngled((*transition, None))
                                                 } else {
-                                                    PathPosition::OnPathAngled((
-                                                        !*transition,
-                                                        None,
-                                                    ))
+                                                    PathPosition::OnPathAngled((!*transition, None))
                                                 }
                                             } else {
                                                 PathPosition::OnPathAngled((
@@ -518,9 +512,7 @@ impl Solvable for Day10 {
                                             PathPosition::OutsidePath
                                         }
                                     }
-                                    (PathPosition::InPath, false) => {
-                                        PathPosition::InPath
-                                    }
+                                    (PathPosition::InPath, false) => PathPosition::InPath,
                                     (_, _) => prev_path_position,
                                 };
 

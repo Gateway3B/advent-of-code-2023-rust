@@ -35,7 +35,7 @@ impl Platform {
         }
         println!("");
     }
-    
+
     fn get_rock(&self, x: usize, y: usize) -> Option<Rock> {
         self.rocks.get(y)?.get(x).map(|tile| tile.clone())
     }
@@ -69,7 +69,7 @@ impl Platform {
 
         Some(())
     }
-    
+
     fn roll_left(&mut self) -> Option<()> {
         let height = self.rocks.len();
         let width = self.rocks.get(0)?.len();
@@ -199,7 +199,7 @@ impl Solvable for Day14 {
         if debug {
             platform.display_grid();
         }
-        
+
         let total_load = platform
             .calc_top_load()
             .context("Issue calculating total load.")?;
@@ -212,7 +212,7 @@ impl Solvable for Day14 {
     fn solve_part_two(debug: bool) -> Result<i64> {
         let path = format!("src/inputs/day{}.txt", Self::get_day());
         let path = Path::new(&path);
-    
+
         let mut platform = Platform { rocks: Vec::new() };
         for line in read_to_string(path)?.lines() {
             let mut rock_row = Vec::new();
@@ -222,7 +222,7 @@ impl Solvable for Day14 {
             }
             platform.rocks.push(rock_row);
         }
-    
+
         if debug {
             platform.display_grid();
         }
@@ -235,8 +235,8 @@ impl Solvable for Day14 {
                 let cycle_length = index - seen_index;
                 index = (1_000_000_000 - index) % cycle_length;
                 break;
-            }""
-            
+            }
+
             seen.push(hash);
             platform.cycle()?;
             index += 1;
@@ -245,20 +245,21 @@ impl Solvable for Day14 {
         if debug {
             println!("{}", index);
         }
-        
+
         for _ in 0..index {
             platform.cycle()?;
         }
-    
+
         if debug {
             platform.display_grid();
         }
-    
+
         let total_load = platform
             .calc_top_load()
             .context("Issue calculating total load.")?;
-    
+
         let total_load = i64::try_from(total_load).context("")?;
-    
-        Ok(total_load)    }
+
+        Ok(total_load)
+    }
 }
